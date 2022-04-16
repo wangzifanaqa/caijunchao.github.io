@@ -1,0 +1,130 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>
+      Intro to MapView - Create a 2D map | Sample | ArcGIS API for JavaScript
+      4.23
+    </title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.23/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.23/"></script>
+
+    <script>
+      require(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer","esri/widgets/Legend","esri/widgets/ScaleBar","esri/widgets/Search","esri/widgets/LayerList","esri/widgets/Fullscreen","esri/widgets/Compass","esri/widgets/BasemapGallery"], (
+        Map,
+        MapView,
+        FeatureLayer,
+        Legend,
+        ScaleBar,
+        Search,
+        LayerList,
+        Fullscreen,
+        Compass,
+        BasemapGallery
+      ) => {
+        var layer = new FeatureLayer({
+          url: "https://www.geosceneonline.cn/server/rest/services/Hosted/%E5%85%A8%E5%9B%BD%E5%90%84%E7%9C%812017_2021%E5%B9%B4%E7%B2%AE%E9%A3%9F%E6%80%BB%E4%BA%A7%E9%87%8F/FeatureServer",
+          title:"全国各省粮食产量增长率(2017-2021)"
+        });
+        var map = new Map({
+          basemap: "osm"
+        });
+
+        var view = new MapView({
+          container: "viewDiv",
+          map: map,
+          zoom: 4,
+          center: [105, 38] // longitude, latitude
+        });
+
+        map.layers.add(layer);
+        
+        var legend = new Legend({
+          view: view,
+          layerInfos: [{
+          layer:layer,
+          title:"粮食产量增长率"
+          }]
+       });
+
+        view.ui.add(legend, "bottom-right");
+        
+        var scaleBar = new ScaleBar({
+          view: view,
+          style:"ruler",
+          unit:"metric"
+       });
+
+        view.ui.add(scaleBar, {
+          position: "bottom-left"
+        })
+        
+        const searchWidget = new Search({
+        view: view
+       });
+
+        view.ui.add(searchWidget, {
+         position: "top-right",
+         index: 2
+       });
+        let layerList = new LayerList({
+        view: view,
+       });
+        view.ui.add(layerList, {
+         position: "top-right"
+       });
+       
+       fullscreen = new Fullscreen({
+        view: view
+       });
+        view.ui.add(fullscreen, "top-left");
+       
+       let compass = new Compass({
+  view: view
+});
+
+// adds the compass to the top left corner of the MapView
+view.ui.add(compass, "top-left");
+
+
+let basemapGallery = new BasemapGallery({
+  view: view
+});
+// Add widget to the top right corner of the view
+view.ui.add(basemapGallery, {
+  position: "top-left"
+});
+
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="basemapGalleryDiv"></div>
+    <div class="top">
+      <b>全国各省粮食产量增长率</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <i>(2017-2021)</i>
+      <div id="searchdiv"></div>
+    </div>
+    <div id="viewDiv"></div>
+    <div id="other"></div>
+    <div id="final"></div>
+  </body>
+</html>
